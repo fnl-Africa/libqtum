@@ -1,4 +1,4 @@
-//tools to use
+# tools to use
 CC = i386-qtum-gcc
 AR = i386-qtum-ar
 AS = i386-qtum-as

@@ -4,15 +4,14 @@
 
 static int screen_putc(int c, FILE *stream)
 {
-    outb(QTUM_OUT_PUTC, (char)c);
     // put character on the screen
     return 1;
 }
 
 static int keyboard_getc(FILE *stream)
 {
-    return inb(QTUM_IN_GETC);
     // read and return a character from keyboard
+    return 0;
 }
 
 static void screen_pre_output(FILE *stream)
