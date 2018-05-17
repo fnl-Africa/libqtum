@@ -32,5 +32,10 @@ $(S_QTUM_OBJS): $(HDRS) $(S_QTUM_SRC)
 clean:
 	rm -f $(C_QTUM_OBJS) $(OUTPUTS) $(S_QTUM_OBJS)
 
+deploy:
+	echo "Warning! Do not use sudo if this fails!!"
+	cp libqtum.a $(SYSROOT)/usr/lib/
+	cp include/* $(SYSROOT)/usr/include/
+
 
 
