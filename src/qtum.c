@@ -53,3 +53,37 @@ void __init_qtum(){
     setup_terminal_io();
 }
 
+
+int isCreate(){
+    return __qtum_syscall(SYSCALL_IS_CREATE, 0, 0, 0, 0, 0, 0);
+}
+
+void* getCallData(){
+    if(isCreate()){
+        return NULL;
+    }
+    return __tx_call_data;
+}
+int getCallDataSize(){
+    if(isCreate()){
+        return 0;
+    }
+    return transactionData->callDataSize;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -3,51 +3,61 @@
 
 #include <stdint.h>
 
+//internal addresses
+
+#define CODE_ADDRESS 0x1000
+#define MAX_CODE_SIZE 0x10000
+#define DATA_ADDRESS 0x100000
+#define MAX_DATA_SIZE 0x10000
+#define STACK_ADDRESS 0x200000
+#define MAX_STACK_SIZE 1024 * 8
+
+#define TX_CALL_DATA_ADDRESS 0x210000
+uint8_t * __tx_call_data = (uint8_t*) 0x210000;
+
+#define TX_DATA_ADDRESS 0xD0000000
+#define TX_DATA_ADDRESS_END 0xF0000000
+
+
 
 //system calls:
 
+#define SYSCALL_IS_CREATE 6
 
 //debug only system calls
 #define SYSCALL_INTERNAL_PRINT 0xFFFF0001
 
+//internal syscall routine
 long __qtum_syscall(long number, long p1, long p2, long p3, long p4, long p5, long p6);
-
-static void outd(uint16_t port, uint32_t val)
-{
-    asm volatile ( "out %0, %1" : : "a"(val), "Nd"(port) );
-}
-
-static uint32_t ind(uint16_t port)
-{
-    uint32_t ret;
-    asm volatile ( "in %1, %0" : "=a"(ret) : "Nd"(port) );
-    return ret;
-}
-static void outw(uint16_t port, uint16_t val)
-{
-    asm volatile ( "outw %0, %1" : : "a"(val), "Nd"(port) );
-}
-
-static uint16_t inw(uint16_t port)
-{
-    uint16_t ret;
-    asm volatile ( "inw %1, %0" : "=a"(ret) : "Nd"(port) );
-    return ret;
-}
-static void outb(uint16_t port, uint8_t val)
-{
-    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
-}
-
-static uint8_t inb(uint16_t port)
-{
-    uint8_t ret;
-    asm volatile ( "inb %1, %0" : "=a"(ret) : "Nd"(port) );
-    return ret;
-}
 
 //called internally to initialize libc, etc
 void __init_qtum();
+
+
+//structs
+#define ADDRESS_DATA_SIZE 32
+
+typedef struct{
+    //Do not modify this struct's fields
+    //This is consensus critical!
+    uint32_t version;
+    uint8_t data[ADDRESS_DATA_SIZE];
+} __attribute__((__packed__)) UniversalAddressABI;
+
+typedef struct {
+    uint32_t size;
+    uint32_t callDataSize;
+    UniversalAddressABI sender;
+} __attribute__((__packed__)) TxDataABI;
+
+const TxDataABI* const transactionData = (const TxDataABI* const) TX_DATA_ADDRESS;
+
+//metadata api
+void* getCallData();
+int isCreate();
+int getSender(UniversalAddressABI* ua);
+
+
 
 
 
