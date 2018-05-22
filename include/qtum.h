@@ -13,7 +13,7 @@
 #define MAX_STACK_SIZE 1024 * 8
 
 #define TX_CALL_DATA_ADDRESS 0x210000
-uint8_t * __tx_call_data = (uint8_t*) 0x210000;
+static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 
 #define TX_DATA_ADDRESS 0xD0000000
 #define TX_DATA_ADDRESS_END 0xF0000000
@@ -50,10 +50,10 @@ typedef struct {
     UniversalAddressABI sender;
 } __attribute__((__packed__)) TxDataABI;
 
-const TxDataABI* const transactionData = (const TxDataABI* const) TX_DATA_ADDRESS;
+static const TxDataABI* const transactionData = (const TxDataABI* const) TX_DATA_ADDRESS;
 
 //metadata api
-void* getCallData();
+const void* getCallData();
 int isCreate();
 int getSender(UniversalAddressABI* ua);
 

@@ -58,7 +58,7 @@ int isCreate(){
     return __qtum_syscall(SYSCALL_IS_CREATE, 0, 0, 0, 0, 0, 0);
 }
 
-void* getCallData(){
+const void* getCallData(){
     if(isCreate()){
         return NULL;
     }
