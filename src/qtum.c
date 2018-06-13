@@ -1,5 +1,6 @@
 #include "qtum.h"
 #include <stdio.h>
+#include <string.h>
 
 
 static int screen_putc(int c, FILE *stream)
@@ -96,6 +97,9 @@ int getBlockHash(uint32_t height, hash256_t* hash){
     return __qtum_syscall(SYSCALL_GetBlockHash, height, (uint32_t) hash, 0, 0, 0, 0);
 }
 
+int getSelfAddress(UniversalAddressABI *address){
+    return __qtum_syscall(SYSCALL_SelfAddress, (uint32_t) address, 0, 0, 0, 0, 0);
+}
 
 
 

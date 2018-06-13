@@ -30,6 +30,7 @@ static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 #define SYSCALL_BlockHeight 4
 #define SYSCALL_GetBlockHash 5
 #define SYSCALL_IsCreate 6
+#define SYSCALL_SelfAddress 7
 
 
 //debug only system calls
@@ -74,7 +75,7 @@ uint64_t getBlockDifficulty();
 uint32_t getBlockHeight();
 
 int getBlockHash(uint32_t height, hash256_t* hash);
-
+int getSelfAddress(UniversalAddressABI *addr);
 
 
 
