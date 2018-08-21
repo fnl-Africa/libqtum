@@ -101,7 +101,12 @@ int getSelfAddress(UniversalAddressABI *address){
     return __qtum_syscall(QSC_SelfAddress, (uint32_t) address, 0, 0, 0, 0, 0);
 }
 
-
+int qtumStore(uint8_t* key, size_t keysize, uint8_t* value, size_t valuesize){
+    return __qtum_syscall(QSC_WriteStorage, (uint32_t)key, keysize, (uint32_t) value, valuesize,0,0);
+}
+int qtumLoad(uint8_t* key, size_t keysize, uint8_t* value, size_t maxvalueeize){
+    return __qtum_syscall(QSC_ReadStorage, (uint32_t) key, keysize, (uint32_t) value, maxvalueeize, 0, 0);
+}
 
 
 

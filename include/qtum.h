@@ -2,6 +2,7 @@
 #define QTUM_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 //internal addresses
 
@@ -109,6 +110,9 @@ uint32_t getBlockHeight();
 
 int getBlockHash(uint32_t height, hash256_t* hash);
 int getSelfAddress(UniversalAddressABI *addr);
+
+int qtumStore(uint8_t* key, size_t keysize, uint8_t* value, size_t valuesize); //returns value size
+int qtumLoad(uint8_t* key, size_t keysize, uint8_t* value, size_t maxvalueeize); //returns actual value size
 
 
 
