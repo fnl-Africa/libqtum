@@ -56,7 +56,7 @@ void __init_qtum(){
 
 
 int isCreate(){
-    return __qtum_syscall(SYSCALL_IsCreate, 0, 0, 0, 0, 0, 0);
+    return __qtum_syscall(QSC_IsCreate, 0, 0, 0, 0, 0, 0);
 }
 
 const void* getCallData(){
@@ -74,31 +74,31 @@ int getCallDataSize(){
 
 
 uint32_t getPrevBlockTime(){
-    return __qtum_syscall(SYSCALL_PreviousBlockTime, 0, 0, 0, 0, 0, 0);
+    return __qtum_syscall(QSC_PreviousBlockTime, 0, 0, 0, 0, 0, 0);
 }
 uint64_t getBlockGasLimit(){
     uint64_t res = 0;
-    __qtum_syscall(SYSCALL_BlockGasLimit, (uint32_t) &res, 0, 0, 0, 0, 0);
+    __qtum_syscall(QSC_BlockGasLimit, (uint32_t) &res, 0, 0, 0, 0, 0);
     return res;
 }
 void getBlockCreator(UniversalAddressABI *address){
-    __qtum_syscall(SYSCALL_BlockCreator, (uint32_t) address, 0, 0, 0, 0, 0);
+    __qtum_syscall(QSC_BlockCreator, (uint32_t) address, 0, 0, 0, 0, 0);
 }
 uint64_t getBlockDifficulty(){
     uint64_t res = 0;
-    __qtum_syscall(SYSCALL_BlockDifficulty, (uint32_t) &res, 0, 0, 0, 0, 0);
+    __qtum_syscall(QSC_BlockDifficulty, (uint32_t) &res, 0, 0, 0, 0, 0);
     return res;
 }
 uint32_t getBlockHeight(){
-    return __qtum_syscall(SYSCALL_BlockHeight, 0, 0, 0, 0, 0, 0);
+    return __qtum_syscall(QSC_BlockHeight, 0, 0, 0, 0, 0, 0);
 }
 
 int getBlockHash(uint32_t height, hash256_t* hash){
-    return __qtum_syscall(SYSCALL_GetBlockHash, height, (uint32_t) hash, 0, 0, 0, 0);
+    return __qtum_syscall(QSC_GetBlockHash, height, (uint32_t) hash, 0, 0, 0, 0);
 }
 
 int getSelfAddress(UniversalAddressABI *address){
-    return __qtum_syscall(SYSCALL_SelfAddress, (uint32_t) address, 0, 0, 0, 0, 0);
+    return __qtum_syscall(QSC_SelfAddress, (uint32_t) address, 0, 0, 0, 0, 0);
 }
 
 
