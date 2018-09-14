@@ -1,7 +1,7 @@
 # tools to use
-CC = i386-qtum-gcc
-AR = i386-qtum-ar
-AS = i386-qtum-as
+CC = i686-qtum-gcc
+AR = i686-qtum-ar
+AS = i686-qtum-as
 
 HDRS = include/qtum.h
 
