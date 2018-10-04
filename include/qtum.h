@@ -19,7 +19,10 @@ static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 #define TX_DATA_ADDRESS 0xD0000000
 #define TX_DATA_ADDRESS_END 0xF0000000
 
-//system calls:
+
+
+
+static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 
 //interrupt 0x40
 //QSC = Qtum System Call
@@ -41,6 +44,7 @@ static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 #define QSC_DataSize                13
 #define QSC_ScratchSize             14
 #define QSC_SelfDestruct            15
+#define QSC_AddReturnData           16
 
 
     //storage commands, 0x1000
@@ -65,10 +69,17 @@ static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 #define QSC_CallLibrary             0x4001
 
 
+//ABI type prefixes
+//note the limit for this is 15, since it should fit into a nibble
+#define ABI_TYPE_UNKNOWN 0
+#define ABI_TYPE_INT 1
+#define ABI_TYPE_UINT 2
+#define ABI_TYPE_HEX 3
+#define ABI_TYPE_STRING 4
+#define ABI_TYPE_BOOL 5
+#define ABI_TYPE_ADDRESS 6
 
 
-//debug only system calls
-#define SYSCALL_INTERNAL_PRINT 0xFFFF0001
 
 //internal syscall routine
 long __qtum_syscall(long number, long p1, long p2, long p3, long p4, long p5, long p6);
@@ -99,6 +110,7 @@ static const TxDataABI* const transactionData = (const TxDataABI* const) TX_DATA
 
 //metadata api
 const void* getCallData();
+int getCallDataSize();
 int isCreate();
 int getSender(UniversalAddressABI* ua);
 
@@ -111,10 +123,13 @@ uint32_t getBlockHeight();
 int getBlockHash(uint32_t height, hash256_t* hash);
 int getSelfAddress(UniversalAddressABI *addr);
 
-int qtumStore(uint8_t* key, size_t keysize, uint8_t* value, size_t valuesize); //returns value size
-int qtumLoad(uint8_t* key, size_t keysize, uint8_t* value, size_t maxvalueeize); //returns actual value size
+int qtumStore(const void* key, size_t keysize, const void* value, size_t valuesize); //returns value size
+int qtumLoad(const void* key, size_t keysize, void* value, size_t maxvalueeize); //returns actual value size
 
-
-
+//return data functions
+int qtumAddReturnData(const void* key, size_t keysize, int keytype, const void* value, size_t valuesize, int valuetype);
+int qtumReturnStringString(const char* key, const char* value);
+int qtumReturnStringInt64(const char* key, int64_t value);
+int qtumReturnAddressInt64(const UniversalAddressABI* key, int64_t value);
 
 #endif
