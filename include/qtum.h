@@ -19,8 +19,12 @@ static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 #define TX_DATA_ADDRESS 0xD0000000
 #define TX_DATA_ADDRESS_END 0xF0000000
 
+//BEGIN copy from qtum
 
 
+
+
+//constants below this line should exactly match libqtum's qtum.h! 
 
 static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 
@@ -44,7 +48,14 @@ static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 #define QSC_DataSize                13
 #define QSC_ScratchSize             14
 #define QSC_SelfDestruct            15
-#define QSC_AddReturnData           16
+
+#define QSC_AddEvent                16
+/* -- this quickly gets very complicated. Defer/cancel implementation
+#define QSC_GetEvent                17
+#define QSC_GetEventSize            18
+#define QSC_ExecutingCallID         19
+#define QSC_NextCallID              20
+*/
 
 
     //storage commands, 0x1000
@@ -56,15 +67,27 @@ static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 #define QSC_GetBalance              0x2001
 #define QSC_SendValueAndCall        0x2002
 
-    //caller commands, 0x3000
+    //callee commands, 0x3000
 #define QSC_GasProvided             0x3000
 #define QSC_CallerTransaction       0x3001 //provides output scripts, etc
 #define QSC_ValueProvided           0x3002
 #define QSC_OriginAddress           0x3003
 #define QSC_SenderAddress           0x3004
 #define QSC_CallStackSize           0x3005
+//SCCS = Smart Contract Communication Stack
+//note: Upon contract error, this stack is not cleared. Thus an error contract can have side effects
+#define QSC_SCCSItemCount               0x3006
+//#define QSC_SCCSMaxItems            0x3007
+//#define QSC_SCCSMaxSize             0x3008
+#define QSC_SCCSSize                0x3009
+#define QSC_SCCSItemSize            0x300A
+#define QSC_SCCSPop                 0x300B
+#define QSC_SCCSPeek                0x300C
+#define QSC_SCCSPush                0x300D
+#define QSC_SCCSDiscard             0x300E //pops off the stack without any data transfer possible (for cheaper gas cost)
+#define QSC_SCCSClear               0x300F
 
-    //call commands, 0x4000
+    //caller commands, 0x4000
 #define QSC_CallContract            0x4000
 #define QSC_CallLibrary             0x4001
 
@@ -79,7 +102,13 @@ static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 #define ABI_TYPE_BOOL 5
 #define ABI_TYPE_ADDRESS 6
 
+enum QtumEndpoint{
+    QtumSystem = 0x40,
+    QtumTrustedLibrary = 0x41,
+    InteralUI = 0x50
+};
 
+//END copy from qtum
 
 //internal syscall routine
 long __qtum_syscall(long number, long p1, long p2, long p3, long p4, long p5, long p6);
@@ -126,10 +155,15 @@ int getSelfAddress(UniversalAddressABI *addr);
 int qtumStore(const void* key, size_t keysize, const void* value, size_t valuesize); //returns value size
 int qtumLoad(const void* key, size_t keysize, void* value, size_t maxvalueeize); //returns actual value size
 
-//return data functions
-int qtumAddReturnData(const void* key, size_t keysize, int keytype, const void* value, size_t valuesize, int valuetype);
-int qtumReturnStringString(const char* key, const char* value);
-int qtumReturnStringInt64(const char* key, int64_t value);
-int qtumReturnAddressInt64(const UniversalAddressABI* key, int64_t value);
+//event functions
+int qtumEvent(const void* key, size_t keysize, int keytype, const void* value, size_t valuesize, int valuetype);
+int qtumEventStringString(const char* key, const char* value);
+int qtumEventStringInt64(const char* key, int64_t value);
+int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value);
+
+//helper function that just does qtumEventStringString("error", msg); and then kills contract execution
+int qtumError(const char* msg);
+
+
 
 #endif

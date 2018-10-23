@@ -60,9 +60,6 @@ int isCreate(){
 }
 
 const void* getCallData(){
-    if(isCreate()){
-        return NULL;
-    }
     return __tx_call_data;
 }
 int getCallDataSize(){
@@ -108,19 +105,19 @@ int qtumLoad(const void* key, size_t keysize, void* value, size_t maxvalueeize){
     return __qtum_syscall(QSC_ReadStorage, (uint32_t) key, keysize, (uint32_t) value, maxvalueeize, 0, 0);
 }
 
-int qtumAddReturnData(const void* key, size_t keysize, int keytype, const void* value, size_t valuesize, int valuetype){
+int qtumEvent(const void* key, size_t keysize, int keytype, const void* value, size_t valuesize, int valuetype){
     int type = (keytype << 4 | (0x0F & valuetype)) & 0xFF;
-    return __qtum_syscall(QSC_AddReturnData, (uint32_t)key, keysize, (uint32_t) value, valuesize, type,0);
+    return __qtum_syscall(QSC_AddEvent, (uint32_t)key, keysize, (uint32_t) value, valuesize, type,0);
 }
 
-int qtumReturnStringString(const char* key, const char* value){
-    return qtumAddReturnData((uint8_t*) key, strlen(key), ABI_TYPE_STRING, (uint8_t*) value, strlen(value), ABI_TYPE_STRING);
+int qtumEventStringString(const char* key, const char* value){
+    return qtumEvent((uint8_t*) key, strlen(key), ABI_TYPE_STRING, (uint8_t*) value, strlen(value), ABI_TYPE_STRING);
 }
-int qtumReturnStringInt64(const char* key, int64_t value){
-    return qtumAddReturnData((uint8_t*) key, strlen(key), ABI_TYPE_STRING, (uint8_t*) &value, sizeof(int64_t), ABI_TYPE_INT);
+int qtumEventStringInt64(const char* key, int64_t value){
+    return qtumEvent((uint8_t*) key, strlen(key), ABI_TYPE_STRING, (uint8_t*) &value, sizeof(int64_t), ABI_TYPE_INT);
 }
-int qtumReturnAddressInt64(const UniversalAddressABI* key, int64_t value){
-    return qtumAddReturnData((uint8_t*) key, sizeof(*key), ABI_TYPE_ADDRESS, (uint8_t*) &value, sizeof(value), ABI_TYPE_INT);
+int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value){
+    return qtumEvent((uint8_t*) key, sizeof(*key), ABI_TYPE_ADDRESS, (uint8_t*) &value, sizeof(value), ABI_TYPE_INT);
 }
 
 int getSender(UniversalAddressABI *address){
