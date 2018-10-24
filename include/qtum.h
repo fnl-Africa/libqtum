@@ -21,9 +21,6 @@ static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
 
 //BEGIN copy from qtum
 
-
-
-
 //constants below this line should exactly match libqtum's qtum.h! 
 
 static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
@@ -91,6 +88,18 @@ static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 #define QSC_CallContract            0x4000
 #define QSC_CallLibrary             0x4001
 
+//error code types
+//These will cause appropriate revert of state etc
+//note, this is the last value pushed onto SCCS upon contract termination
+#define QTUM_EXIT_SUCCESS 0 //successful execution
+#define QTUM_EXIT_HAS_DATA 1 //there is user defined data pushed onto the stack (optional, no consensus function)
+#define QTUM_EXIT_REVERT 2 //execution that reverted state
+#define QTUM_EXIT_ERROR 4 //error execution (which may or may not revert state)
+#define QTUM_EXIT_OUT_OF_GAS 8 //execution which ended in out of gas exception
+#define QTUM_EXIT_CRASH 16 //execution which ended due to CPU or memory errors
+#define QTUM_EXIT_SYSCALL_EXCEPTION 32 //execution which ended due to an exception by a syscall, such as transfering more money than the contract owns
+
+//NOTE: only QTUM_EXIT_SUCCESS, QTUM_EXIT_ERROR, QTUM_EXIT_REVERT, and QTUM_HAS_DATA may be specified by __qtum_terminate
 
 //ABI type prefixes
 //note the limit for this is 15, since it should fit into a nibble
@@ -103,6 +112,7 @@ static const int QTUM_SYSTEM_ERROR_INT = 0xFF;
 #define ABI_TYPE_ADDRESS 6
 
 enum QtumEndpoint{
+    QtumExit = 0xF0,
     QtumSystem = 0x40,
     QtumTrustedLibrary = 0x41,
     InteralUI = 0x50
@@ -112,6 +122,7 @@ enum QtumEndpoint{
 
 //internal syscall routine
 long __qtum_syscall(long number, long p1, long p2, long p3, long p4, long p5, long p6);
+void __qtum_terminate(long errorCode) __attribute__ ((noreturn));
 
 //called internally to initialize libc, etc
 void __init_qtum();
@@ -162,7 +173,8 @@ int qtumEventStringInt64(const char* key, int64_t value);
 int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value);
 
 //helper function that just does qtumEventStringString("error", msg); and then kills contract execution
-int qtumError(const char* msg);
+void qtumError(const char* msg) __attribute__ ((noreturn));
+void qtumErrorWithCode(uint32_t code, const char* msg) __attribute__ ((noreturn));
 
 int qtumStackItemCount();
 size_t qtumStackMemorySize();

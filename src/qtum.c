@@ -150,6 +150,17 @@ int qtumStackClear(){
      return __qtum_syscall(QSC_SCCSClear, 0, 0, 0, 0, 0, 0);
 }
 
+void qtumError(const char* msg){
+    qtumStackClear();
+    qtumEventStringString("error", msg);
+    __qtum_terminate(QTUM_EXIT_ERROR | QTUM_EXIT_REVERT);
+}
+void qtumErrorWithCode(uint32_t code, const char* msg){
+    qtumStackClear();
+    qtumStackPush(&code, sizeof(code));
+    qtumEventStringString("error", msg);
+    __qtum_terminate(QTUM_EXIT_ERROR | QTUM_EXIT_REVERT | QTUM_EXIT_HAS_DATA);
+}
 
 
 

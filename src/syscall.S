@@ -20,3 +20,13 @@ __qtum_syscall:
   pop %edi
   pop %ebp
   ret
+
+.global __qtum_terminate
+//__qtum_terminate(long errorCode)
+__qtum_terminate:
+//no need to save registers etc
+mov 4+0(%esp), %eax
+ //just in case this could somehow return
+int $0xF0
+cli
+hlt
