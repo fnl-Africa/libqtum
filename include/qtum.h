@@ -13,9 +13,6 @@
 #define STACK_ADDRESS 0x200000
 #define MAX_STACK_SIZE 1024 * 8
 
-#define TX_CALL_DATA_ADDRESS 0x210000
-static const uint8_t * const __tx_call_data = (uint8_t*) 0x210000;
-
 #define TX_DATA_ADDRESS 0xD0000000
 #define TX_DATA_ADDRESS_END 0xF0000000
 
@@ -149,8 +146,6 @@ typedef uint8_t hash256_t[32];
 static const TxDataABI* const transactionData = (const TxDataABI* const) TX_DATA_ADDRESS;
 
 //metadata api
-const void* getCallData();
-int getCallDataSize();
 int isCreate();
 int getSender(UniversalAddressABI* ua);
 
@@ -179,12 +174,20 @@ void qtumErrorWithCode(uint32_t code, const char* msg) __attribute__ ((noreturn)
 int qtumStackItemCount();
 size_t qtumStackMemorySize();
 size_t qtumStackItemSize();
-size_t qtumStackPop(void* buffer, size_t maxSize);
-size_t qtumStackPeek(void* buffer, size_t maxSize);
-int qtumStackPush(const void* buffer, size_t size);
+void qtumStackPop(void* buffer, size_t size);
+size_t qtumStackPopNoError(void* buffer, size_t maxSize);
+void qtumStackPeek(void* buffer, size_t maxSize);
+size_t qtumStackPeekNoError(void* buffer, size_t size);
+void qtumStackPush(const void* buffer, size_t size);
 int qtumStackDiscard();
 int qtumStackClear();
 
+
+//helper macros
+
+#define QTUM_POP_VAL(b) do{qtumStackPop(&(b), sizeof(b));}while(0)
+#define QTUM_PUSH_VAL(b) do{qtumStackPush(&(b), sizeof(b));}while(0)
+#define QTUM_PEEK_VAL(b) do{qtumStackPeek(&(b), sizeof(b));}while(0)
 
 
 

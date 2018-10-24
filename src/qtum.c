@@ -50,6 +50,12 @@ void setup_terminal_io()
     //stdout = &scr_term;
 }
 
+void qtumAssert(int cond, char* msg){
+    if(!cond){
+        qtumError(msg);
+    }
+}
+
 void __init_qtum(){
     setup_terminal_io();
 }
@@ -58,17 +64,6 @@ void __init_qtum(){
 int isCreate(){
     return __qtum_syscall(QSC_IsCreate, 0, 0, 0, 0, 0, 0);
 }
-
-const void* getCallData(){
-    return __tx_call_data;
-}
-int getCallDataSize(){
-    if(isCreate()){
-        return 0;
-    }
-    return transactionData->callDataSize;
-}
-
 
 uint32_t getPrevBlockTime(){
     return __qtum_syscall(QSC_PreviousBlockTime, 0, 0, 0, 0, 0, 0);
@@ -134,14 +129,25 @@ size_t qtumStackMemorySize(){
 size_t qtumStackItemSize(){
      return __qtum_syscall(QSC_SCCSItemSize, 0, 0, 0, 0, 0, 0);
 }
-size_t qtumStackPop(void* buffer, size_t maxSize){
+size_t qtumStackPopNoError(void* buffer, size_t maxSize){
      return __qtum_syscall(QSC_SCCSPop, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
 }
-size_t qtumStackPeek(void* buffer, size_t maxSize){
+size_t qtumStackPeekNoError(void* buffer, size_t maxSize){
      return __qtum_syscall(QSC_SCCSPeek, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
 }
-int qtumStackPush(const void* buffer, size_t size){
-     return __qtum_syscall(QSC_SCCSPush, (uint32_t) buffer, size, 0, 0, 0, 0);
+void qtumStackPop(void* buffer, size_t size){
+    qtumAssert(size != 0, "size must be > 0");
+    size_t sz = qtumStackPopNoError(buffer, size);
+    qtumAssert(sz == size, "stack error");
+}
+void qtumStackPeek(void* buffer, size_t size){
+    qtumAssert(size != 0, "size must be > 0");
+    size_t sz = qtumStackPeekNoError(buffer, size);
+    qtumAssert(sz == size, "stack error");
+}
+void qtumStackPush(const void* buffer, size_t size){
+    qtumAssert(size != 0, "size must be > 0");
+    __qtum_syscall(QSC_SCCSPush, (uint32_t) buffer, size, 0, 0, 0, 0);
 }
 int qtumStackDiscard(){
      return __qtum_syscall(QSC_SCCSDiscard, 0, 0, 0, 0, 0, 0);
