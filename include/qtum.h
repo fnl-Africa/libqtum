@@ -164,6 +164,16 @@ int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value);
 //helper function that just does qtumEventStringString("error", msg); and then kills contract execution
 int qtumError(const char* msg);
 
+int qtumStackItemCount();
+size_t qtumStackMemorySize();
+size_t qtumStackItemSize();
+size_t qtumStackPop(void* buffer, size_t maxSize);
+size_t qtumStackPeek(void* buffer, size_t maxSize);
+int qtumStackPush(const void* buffer, size_t size);
+int qtumStackDiscard();
+int qtumStackClear();
+
+
 
 
 #endif

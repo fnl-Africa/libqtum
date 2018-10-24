@@ -125,6 +125,31 @@ int getSender(UniversalAddressABI *address){
 }
 
 
+int qtumStackItemCount(){
+     return __qtum_syscall(QSC_SCCSItemCount, 0, 0, 0, 0, 0, 0);
+}
+size_t qtumStackMemorySize(){
+     return __qtum_syscall(QSC_SCCSSize, 0, 0, 0, 0, 0, 0);
+}
+size_t qtumStackItemSize(){
+     return __qtum_syscall(QSC_SCCSItemSize, 0, 0, 0, 0, 0, 0);
+}
+size_t qtumStackPop(void* buffer, size_t maxSize){
+     return __qtum_syscall(QSC_SCCSPop, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
+}
+size_t qtumStackPeek(void* buffer, size_t maxSize){
+     return __qtum_syscall(QSC_SCCSPeek, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
+}
+int qtumStackPush(const void* buffer, size_t size){
+     return __qtum_syscall(QSC_SCCSPush, (uint32_t) buffer, size, 0, 0, 0, 0);
+}
+int qtumStackDiscard(){
+     return __qtum_syscall(QSC_SCCSDiscard, 0, 0, 0, 0, 0, 0);
+}
+int qtumStackClear(){
+     return __qtum_syscall(QSC_SCCSClear, 0, 0, 0, 0, 0, 0);
+}
+
 
 
 
