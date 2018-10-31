@@ -3,7 +3,7 @@ CC = i686-qtum-gcc
 AR = i686-qtum-ar
 AS = i686-qtum-as
 
-HDRS = include/qtum.h
+HDRS = include/qtum.h include/shared-x86.h
 
 C_QTUM_SRC = src/qtum.c
 C_QTUM_OBJS = $(subst .c,.o,$(C_QTUM_SRC))
@@ -11,7 +11,7 @@ C_QTUM_OBJS = $(subst .c,.o,$(C_QTUM_SRC))
 S_QTUM_SRC = src/syscall.S
 S_QTUM_OBJS = $(subst .S,.o,$(S_QTUM_SRC))
 
-CFLAGS ?= -Wall -O3  -Wno-unused-function
+CFLAGS ?= -Wall -Os -Wno-unused-function -ffunction-sections -fdata-sections
 CFLAGS += -Iinclude
 
 OUTPUTS = libqtum.a
