@@ -87,7 +87,16 @@ void qtumErrorWithCode(uint32_t code, const char* msg){
     __qtum_terminate(QTUM_EXIT_ERROR | QTUM_EXIT_REVERT | QTUM_EXIT_HAS_DATA);
 }
 
-
+int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, struct QtumCallResultABI* result){
+    return __qtum_syscall(QSC_CallContract,
+        (uint32_t) address,
+         gasLimit,
+         (uint32_t) result,
+         sizeof(struct QtumCallResultABI),
+         (uint32_t) (value  >> 32),
+         (uint32_t) (value & 0xFFFFFFFF)
+    );
+}
 
 
 

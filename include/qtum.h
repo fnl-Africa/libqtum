@@ -48,6 +48,7 @@ void qtumStackPush(const void* buffer, size_t size);
 int qtumStackDiscard();
 int qtumStackClear();
 
+int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, struct QtumCallResultABI* result);
 
 //helper macros
 
