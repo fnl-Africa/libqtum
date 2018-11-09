@@ -6,22 +6,25 @@ int onCreate(){
     return 0;
 }
 
-//#define QTUM_GET_ARG(type, name) do{type name; qtumStackPopNoError(&)}while(0)
-
-
+//format: a:uint32 b:uint32 ADD -> result:uint32
+#define ADDER_CONTRACTFN_ADD 1
 
 int main(){
     if(qtumExec->isCreate){
         return 0;
     }
-    if(qtumStackItemCount() < 2){
-        qtumError("Need 2 items on stack");
+    if(qtumStackItemCount() < 3){
+        qtumError("Need 3 items on stack");
+    }
+    uint8_t func = 0;
+    QTUM_POP_VAL(func);
+    if(func != ADDER_CONTRACTFN_ADD){
+        qtumError("Invalid function");
     }
     uint32_t a = 0, b = 0;
-    //Use no error here because we don't care about size, we're assuming 32 bit either way
-    qtumStackPopNoError(&a, sizeof(uint32_t));
-    qtumStackPopNoError(&b, sizeof(uint32_t));
+    QTUM_POP_VAL(b);
+    QTUM_POP_VAL(a);
     a+=b;
-    qtumStackPush(&a, sizeof(uint32_t));
+    QTUM_PUSH_VAL(a);
     return 0;
 }

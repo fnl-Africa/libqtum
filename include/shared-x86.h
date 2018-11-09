@@ -110,7 +110,9 @@ struct QtumCallResultABI{
     
 }  __attribute__((__packed__));
 
-
+#ifndef QTUM_MOCK
+//Don't expose these in the mocking because it's not really possible to keep it equivalent
+//Really these shouldn't be used in actual contract code anyway
 
 //memory areas
 #define CODE_ADDRESS 0x1000
@@ -126,6 +128,8 @@ struct QtumCallResultABI{
 #define TX_DATA_SIZE 0x100000
 #define BLOCK_DATA_ADDRESS 0xD2000000
 #define BLOCK_DATA_SIZE 0x100000
+
+#endif
 
 //Read only fixed-size per-execution data
 struct ExecDataABI{
