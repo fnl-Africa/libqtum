@@ -68,9 +68,6 @@ int selfBalance(){
 }
 
 int main(){
-    if(qtumExec->isCreate){
-        return 0;
-    }
     uint8_t function = 0;
     QTUM_POP_VAL(function);
     switch(function){

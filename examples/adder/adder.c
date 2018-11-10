@@ -10,9 +10,6 @@ int onCreate(){
 #define ADDER_CONTRACTFN_ADD 1
 
 int main(){
-    if(qtumExec->isCreate){
-        return 0;
-    }
     if(qtumStackItemCount() < 3){
         qtumError("Need 3 items on stack");
     }
