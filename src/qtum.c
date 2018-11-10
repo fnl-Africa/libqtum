@@ -98,6 +98,13 @@ int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint
     );
 }
 
+int qtumParseAddress(const char* address, UniversalAddressABI *output){
+    return __qtum_syscall(QSC_ParseAddress,
+        (uint32_t) address,
+        strlen(address),
+        (uint32_t) output,
+        0, 0 ,0);
+}
 
 
 

@@ -41,6 +41,7 @@ typedef struct qtum_hash32 { uint8_t data[32]; } __attribute__((__packed__)) qtu
 #define QSC_NextCallID              20
 */
 
+#define QSC_ParseAddress          21  
 
     //storage commands, 0x1000
 #define QSC_ReadStorage             0x1000
