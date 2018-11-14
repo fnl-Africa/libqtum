@@ -106,6 +106,14 @@ int qtumParseAddress(const char* address, UniversalAddressABI *output){
         0, 0 ,0);
 }
 
+uint64_t qtumGetBalance(const UniversalAddressABI* address){
+    uint64_t ret = 0;
+    __qtum_syscall(QSC_GetBalance,
+        (uint32_t) address,
+        (uint32_t) &ret,
+        0, 0, 0, 0);
+    return ret;
+}
 
 
 

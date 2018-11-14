@@ -63,6 +63,8 @@ int qtumStackClear();
 int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, struct QtumCallResultABI* result);
 int qtumParseAddress(const char* address, UniversalAddressABI *output);
 
+uint64_t qtumGetBalance(const UniversalAddressABI* address);
+
 //helper macros
 
 #define QTUM_POP_VAL(b) do{qtumStackPop(&(b), sizeof(b));}while(0)
