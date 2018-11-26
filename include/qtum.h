@@ -60,7 +60,7 @@ void qtumStackPush(const void* buffer, size_t size);
 int qtumStackDiscard();
 int qtumStackClear();
 
-int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, struct QtumCallResultABI* result);
+int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, QtumCallResultABI* result);
 int qtumParseAddress(const char* address, UniversalAddressABI *output);
 
 uint64_t qtumGetBalance(const UniversalAddressABI* address);
