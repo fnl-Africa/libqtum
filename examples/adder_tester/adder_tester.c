@@ -20,7 +20,7 @@ int main(){
     uint8_t function = 1;
     QTUM_PUSH_VAL(function); //add function
 
-    struct QtumCallResultABI result;
+    QtumCallResultABI result;
     qtumCallContract(&a, 100000, 0, &result);
     if(result.errorCode != 0){
         qtumError("Adder contract failed");
