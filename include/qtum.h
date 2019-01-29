@@ -36,8 +36,11 @@ static struct ExecDataABI* mock_qtumExec = NULL;
 //metadata api
 
 size_t qtumStore(const void* key, size_t keysize, const void* value, size_t valuesize); //returns value size
+int qtumUpdateBytecode(const void* bytecode, size_t bytecodesize);
 size_t qtumLoad(const void* key, size_t keysize, void* value, size_t maxvalueeize); //returns actual value size
 void qtumLoadExact(const void* key, size_t keysize, void* value, size_t valueeize); //returns actual value size
+void qtumLoadExternal(const UniversalAddressABI* addr, const void* key, size_t keysize, void* value, size_t maxvalueeize);
+void qtumLoadExactExternal(const UniversalAddressABI* addr, const void* key, size_t keysize, void* value, size_t valueeize);
 
 //event functions
 int qtumEvent(const void* key, size_t keysize, int keytype, const void* value, size_t valuesize, int valuetype);
@@ -49,21 +52,44 @@ int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value);
 void qtumError(const char* msg) __attribute__ ((noreturn));
 void qtumErrorWithCode(uint32_t code, const char* msg) __attribute__ ((noreturn));
 
-int qtumStackItemCount();
+//stack ops
+int qtumStackCount();
 size_t qtumStackMemorySize();
-size_t qtumStackItemSize();
-void qtumStackPop(void* buffer, size_t size);
-size_t qtumStackPopNoError(void* buffer, size_t maxSize);
-void qtumStackPeek(void* buffer, size_t maxSize);
-size_t qtumStackPeekNoError(void* buffer, size_t maxSize);
-void qtumStackPush(const void* buffer, size_t size);
-int qtumStackDiscard();
+size_t qtumPeekSize();
+void qtumPopExact(void* buffer, size_t size);
+size_t qtumStackPop(void* buffer, size_t maxSize);
+void qtumPeekExact(void* buffer, size_t maxSize);
+size_t qtumPeek(void* buffer, size_t maxSize);
+void qtumPush(const void* buffer, size_t size);
+int qtumDiscard();
 int qtumStackClear();
+//helpers
+uint8_t qtumPop8();
+uint16_t qtumPop16();
+uint32_t qtumPop32();
+uint64_t qtumPop64();
+void qtumPush8(uint8_t v);
+void qtumPush16(uint16_t v);
+void qtumPush32(uint32_t v);
+void qtumPush64(uint64_t v);
+
+
+
+int qtumSelfCalled();
 
 int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, QtumCallResultABI* result);
 int qtumParseAddress(const char* address, UniversalAddressABI *output);
 
 uint64_t qtumGetBalance(const UniversalAddressABI* address);
+
+
+//internal libc helpers
+void* __qtum_malloc(unsigned int sz);
+void* __qtum_calloc(unsigned int sz);
+void __qtum_free(void* mem);
+void* __qtum_realloc(void* mem, unsigned int newsz);
+
+
 
 //helper macros
 

@@ -39,52 +39,80 @@ int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value){
     return qtumEvent((uint8_t*) key, sizeof(*key), ABI_TYPE_ADDRESS, (uint8_t*) &value, sizeof(value), ABI_TYPE_INT);
 }
 
-int qtumStackItemCount(){
+
+int qtumStackCount(){
      return __qtum_syscall(QSC_SCCSItemCount, 0, 0, 0, 0, 0, 0);
 }
 size_t qtumStackMemorySize(){
      return __qtum_syscall(QSC_SCCSSize, 0, 0, 0, 0, 0, 0);
 }
-size_t qtumStackItemSize(){
+size_t qtumPeekSize(){
      return __qtum_syscall(QSC_SCCSItemSize, 0, 0, 0, 0, 0, 0);
 }
-size_t qtumStackPopNoError(void* buffer, size_t maxSize){
+size_t qtumPop(void* buffer, size_t maxSize){
      return __qtum_syscall(QSC_SCCSPop, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
 }
-size_t qtumStackPeekNoError(void* buffer, size_t maxSize){
+size_t qtumPeek(void* buffer, size_t maxSize){
      return __qtum_syscall(QSC_SCCSPeek, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
 }
-void qtumStackPop(void* buffer, size_t size){
+void qtumPopExact(void* buffer, size_t size){
     qtumAssert(size != 0, "size must be > 0");
-    size_t sz = qtumStackPopNoError(buffer, size);
+    size_t sz = qtumPop(buffer, size);
     qtumAssert(sz == size, "stack error");
 }
-void qtumStackPeek(void* buffer, size_t size){
+void qtumPeekExact(void* buffer, size_t size){
     qtumAssert(size != 0, "size must be > 0");
-    size_t sz = qtumStackPeekNoError(buffer, size);
+    size_t sz = qtumPeek(buffer, size);
     qtumAssert(sz == size, "stack error");
 }
-void qtumStackPush(const void* buffer, size_t size){
+void qtumPush(const void* buffer, size_t size){
     qtumAssert(size != 0, "size must be > 0");
     __qtum_syscall(QSC_SCCSPush, (uint32_t) buffer, size, 0, 0, 0, 0);
 }
-int qtumStackDiscard(){
+int qtumDiscard(){
      return __qtum_syscall(QSC_SCCSDiscard, 0, 0, 0, 0, 0, 0);
 }
 int qtumStackClear(){
      return __qtum_syscall(QSC_SCCSClear, 0, 0, 0, 0, 0, 0);
 }
 
+uint8_t qtumPop8(){
+    uint8_t v;
+    qtumPopExact(&v, sizeof(v));
+    return v;
+}
+uint16_t qtumPop16(){
+    uint16_t v;
+    qtumPopExact(&v, sizeof(v));
+    return v;
+}
+uint32_t qtumPop32(){
+    uint32_t v;
+    qtumPopExact(&v, sizeof(v));
+    return v;
+}
+uint64_t qtumPop64(){
+    uint64_t v;
+    qtumPopExact(&v, sizeof(v));
+    return v;
+}
+void qtumPush8(uint8_t v){
+    qtumPush(&v, sizeof(v));
+}
+void qtumPush16(uint16_t v){
+    qtumPush(&v, sizeof(v));
+}
+void qtumPush32(uint32_t v){
+    qtumPush(&v, sizeof(v));
+}
+void qtumPush64(uint64_t v){
+    qtumPush(&v, sizeof(v));
+}
+
 void qtumError(const char* msg){
     qtumStackClear();
     qtumEventStringString("error", msg);
     __qtum_terminate(QTUM_EXIT_ERROR | QTUM_EXIT_REVERT);
-}
-void qtumErrorWithCode(uint32_t code, const char* msg){
-    qtumStackClear();
-    qtumStackPush(&code, sizeof(code));
-    qtumEventStringString("error", msg);
-    __qtum_terminate(QTUM_EXIT_ERROR | QTUM_EXIT_REVERT | QTUM_EXIT_HAS_DATA);
 }
 
 int qtumCallContract(const UniversalAddressABI *address, uint32_t gasLimit, uint64_t value, QtumCallResultABI* result){
@@ -115,7 +143,30 @@ uint64_t qtumGetBalance(const UniversalAddressABI* address){
     return ret;
 }
 
-
+extern void* __data_end__;
+char* __qtum_malloc_ptr;
+void* __qtum_malloc(unsigned int sz){
+    if(__qtum_malloc_ptr == NULL){
+        __qtum_malloc_ptr = __data_end__;
+    }
+    void* v = __qtum_malloc_ptr;
+    __qtum_malloc_ptr = &__qtum_malloc_ptr[sz + 1];
+    return v;
+}
+void* __qtum_calloc(unsigned int sz){
+    void* p = __qtum_malloc(sz);
+    if(p == NULL){
+        return NULL;
+    }
+    memset(p, 0, sz);
+    return p;
+}
+void __qtum_free(void* mem){
+    //no-op for now
+}
+void* __qtum_realloc(void* mem, unsigned int newsz){
+    return NULL; //not yet supported
+}
 
 
 
