@@ -56,17 +56,17 @@ size_t qtumPeek(void* buffer, size_t maxSize){
      return __qtum_syscall(QSC_SCCSPeek, (uint32_t) buffer, maxSize, 0, 0, 0, 0);
 }
 void qtumPopExact(void* buffer, size_t size){
-    qtumAssert(size != 0, "size must be > 0");
+    qtumAssert(buffer != NULL, "null buffer");
     size_t sz = qtumPop(buffer, size);
     qtumAssert(sz == size, "stack error");
 }
 void qtumPeekExact(void* buffer, size_t size){
-    qtumAssert(size != 0, "size must be > 0");
+    qtumAssert(buffer != NULL, "null buffer");
     size_t sz = qtumPeek(buffer, size);
     qtumAssert(sz == size, "stack error");
 }
 void qtumPush(const void* buffer, size_t size){
-    qtumAssert(size != 0, "size must be > 0");
+    qtumAssert(buffer != NULL, "null buffer");
     __qtum_syscall(QSC_SCCSPush, (uint32_t) buffer, size, 0, 0, 0, 0);
 }
 int qtumDiscard(){

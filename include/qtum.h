@@ -93,10 +93,6 @@ void* __qtum_realloc(void* mem, unsigned int newsz);
 
 //helper macros
 
-#define QTUM_POP_VAL(b) do{qtumStackPop(&(b), sizeof(b));}while(0)
-#define QTUM_PUSH_VAL(b) do{qtumStackPush(&(b), sizeof(b));}while(0)
-#define QTUM_PEEK_VAL(b) do{qtumStackPeek(&(b), sizeof(b));}while(0)
-
 #define QTUM_STORE_VAL(k, v) do{qtumStore(&(k), sizeof(k), &(v), sizeof(v));}while(0)
 #define QTUM_LOAD_VAL(k, v) do{qtumLoadExact(&(k), sizeof(k), &(v), sizeof(v));}while(0)
 
