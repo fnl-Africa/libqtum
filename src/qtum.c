@@ -143,11 +143,15 @@ uint64_t qtumGetBalance(const UniversalAddressABI* address){
     return ret;
 }
 
-extern void* __data_end__;
-char* __qtum_malloc_ptr;
+//this __end__ symbol is located at the end of the .data and .bss symbol and is effectively the end of
+//the memory which is controlled by the compiler
+//this symbol is created by the qtum linker script
+extern char __end__;
+
+char* __qtum_malloc_ptr = NULL;
 void* __qtum_malloc(unsigned int sz){
     if(__qtum_malloc_ptr == NULL){
-        __qtum_malloc_ptr = __data_end__;
+        __qtum_malloc_ptr = (char*) &__end__;
     }
     void* v = __qtum_malloc_ptr;
     __qtum_malloc_ptr = &__qtum_malloc_ptr[sz + 1];
