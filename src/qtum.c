@@ -40,7 +40,7 @@ int qtumEventAddressInt64(const UniversalAddressABI* key, int64_t value){
 }
 
 
-int qtumStackCount(){
+int qtumStackItemCount(){
      return __qtum_syscall(QSC_SCCSItemCount, 0, 0, 0, 0, 0, 0);
 }
 size_t qtumStackMemorySize(){

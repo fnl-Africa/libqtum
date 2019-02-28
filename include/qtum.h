@@ -57,7 +57,7 @@ int qtumStackCount();
 size_t qtumStackMemorySize();
 size_t qtumPeekSize();
 void qtumPopExact(void* buffer, size_t size);
-size_t qtumStackPop(void* buffer, size_t maxSize);
+size_t qtumPop(void* buffer, size_t maxSize);
 void qtumPeekExact(void* buffer, size_t maxSize);
 size_t qtumPeek(void* buffer, size_t maxSize);
 void qtumPush(const void* buffer, size_t size);
