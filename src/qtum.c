@@ -76,6 +76,14 @@ int qtumStackClear(){
      return __qtum_syscall(QSC_SCCSClear, 0, 0, 0, 0, 0, 0);
 }
 
+int qtumSHA256(void *data, size_t dataSize, void *output)
+{
+    qtumAssert(data != NULL, "null data input");
+    qtumAssert(dataSize != 0, "data size should be greater than 0");
+    qtumAssert(output != NULL, "null data output");
+    return __qtum_syscall(QSC_SHA256, data, dataSize, &output, 0, 0, 0);
+}
+
 uint8_t qtumPop8(){
     uint8_t v;
     qtumPopExact(&v, sizeof(v));
