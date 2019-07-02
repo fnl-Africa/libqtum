@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 //structs
-#define ADDRESS_DATA_SIZE 64
+#define ADDRESS_DATA_SIZE 20
 
 typedef struct
 {
